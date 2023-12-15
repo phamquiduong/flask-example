@@ -10,9 +10,11 @@ class APIException(HTTPException):
     STATUS: HTTPStatus = HTTPStatus.INTERNAL_SERVER_ERROR
 
     def __init__(self, message: str | None = None,
-                 error_code: str | None = None,
+                 api_code: int = 0,
+                 error_code: int = 0,
                  error_fields: dict[str, str] | None = None) -> None:
         super().__init__(description=message)
+        self.api_code = api_code
         self.error_code = error_code
         self.error_fields = error_fields
 
@@ -24,7 +26,7 @@ class APIException(HTTPException):
             status_code=self.STATUS,
             code=self.STATUS.phrase,
 
-            error_code=self.error_code or f'ERR-{self.STATUS}',
+            error_code=f'ERR-{self.STATUS}-{self.api_code:03d}-{self.error_code:03d}',
             message=self.description or self.STATUS.description,
 
             error_fields=error_fields

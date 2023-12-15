@@ -1,14 +1,16 @@
 from flask import Blueprint, request
 
-from apps.auth.schemas.login_schema import LoginRequest, LoginResponse
+from apps.auth.schemas.login_schema import LoginRequest
 from apps.auth.services.login_service import login_service
-from core.decorator.api_view import api_view
+from core.decorator import request_validation, response_jsonify
+from core.utils.parse_request import parse_request
 
 auth_route = Blueprint('auth', __name__)
 
 
-@auth_route.post('/login')
-@api_view
+@auth_route.post('/login')  # type: ignore
+@response_jsonify()
+@request_validation(api_code=1, error_code=1)
 def login():
-    response: LoginResponse = login_service(LoginRequest(**request.args))
-    return response.model_dump_json()
+    request_data = LoginRequest(**parse_request(request))
+    return login_service(request_data)
