@@ -3,7 +3,7 @@ from pydantic import ValidationError
 from core.api_exception import BadRequestException
 
 
-def request_validation(api_code: int = 0, error_code: int = 0):
+def request_validation(api_code: int = 0, error_code: int = 1):
     def inner(func):
         def wrapper(*args, **kwargs):
             try:

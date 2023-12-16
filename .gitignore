@@ -1,5 +1,21 @@
+# Python
 __pycache__/
+
+# Environment
+.env
+log/
+logs/
 .venv/
 venv/
-.env
 
+# Docker
+docker/nginx/config/nginx.conf
+
+# Database
+database/
+
+# Static collections
+static/
+
+# Media folder
+media/

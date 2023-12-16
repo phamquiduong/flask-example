@@ -10,7 +10,7 @@ auth_route = Blueprint('auth', __name__)
 
 @auth_route.post('/login')  # type: ignore
 @response_jsonify()
-@request_validation(api_code=1, error_code=1)
+@request_validation(api_code=1)
 def login():
     request_data = LoginRequest(**parse_request(request))
     return login_service(request_data)
