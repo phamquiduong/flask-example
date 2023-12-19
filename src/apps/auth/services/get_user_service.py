@@ -5,8 +5,6 @@ import boto3
 from apps.auth.schemas.get_user_schema import GetUserRequest, GetUserResponse
 
 AWS_REGION = os.getenv('AWS_REGION')
-USER_POOL_ID = os.getenv('USER_POOL_ID')
-CLIENT_ID = os.getenv('CLIENT_ID')
 
 
 def get_user_service(request: GetUserRequest):
