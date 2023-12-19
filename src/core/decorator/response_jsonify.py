@@ -17,5 +17,6 @@ def response_jsonify(status_code: HTTPStatus | int = HTTPStatus.OK):
                 return jsonify(response.model_dump()), status_code
 
             return jsonify(response), status_code
+        wrapper.__name__ = func.__name__
         return wrapper
     return inner

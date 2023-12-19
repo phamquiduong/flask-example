@@ -14,5 +14,6 @@ def request_validation(api_code: int = 0, error_code: int = 1):
                                            error_code=error_code,
                                            error_fields=error_fields,
                                            message='Invalid request data').dump_response()
+        wrapper.__name__ = func.__name__
         return wrapper
     return inner

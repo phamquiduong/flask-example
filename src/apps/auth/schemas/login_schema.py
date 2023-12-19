@@ -1,5 +1,3 @@
-from typing import Any
-
 from pydantic import BaseModel, EmailStr
 
 
@@ -9,4 +7,4 @@ class LoginRequest(BaseModel):
 
 
 class LoginResponse(BaseModel):
-    access_token: Any
+    access_token: str
