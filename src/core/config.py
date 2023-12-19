@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 
 from dotenv import load_dotenv
@@ -16,7 +17,7 @@ class Config:
     PROPAGATE_EXCEPTIONS = None
     TRAP_HTTP_EXCEPTIONS = False
     TRAP_BAD_REQUEST_ERRORS = None
-    SECRET_KEY = 'd0dd818707b8c9fa6fd9f540fe04a8a3e251193732e154a75ed7b476818939c3'
+    SECRET_KEY = os.getenv('SECRET_KEY')
     SESSION_COOKIE_NAME = 'session'
     SESSION_COOKIE_DOMAIN = None
     SESSION_COOKIE_PATH = None

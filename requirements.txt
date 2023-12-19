@@ -6,3 +6,4 @@ flask
 pydantic
 pydantic[email]
 
+boto3
