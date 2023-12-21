@@ -1,13 +1,26 @@
 from http import HTTPStatus
 
 from flask import Response, jsonify
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
+
+from core.api_exception import APIException, BadRequestException
 
 
-def response_jsonify(status_code: HTTPStatus | int = HTTPStatus.OK):
+def response_jsonify(status_code: HTTPStatus | int = HTTPStatus.OK, api_code: int = 0):
     def inner(func):
         def wrapper(*args, **kwargs):
-            response = func(*args, **kwargs)
+            try:
+                response = func(*args, **kwargs)
+            except ValidationError as valid_error:
+                error_fields = {str(error["loc"][0]): error["msg"] for error in valid_error.errors()}
+                return BadRequestException(api_code=api_code,
+                                           error_fields=error_fields,
+                                           message='Invalid request data').dump_response()
+            except APIException as api_exc:
+                api_exc.api_code = api_code
+                return api_exc.dump_response()
+            except Exception as ex:
+                return APIException(api_code=api_code, message=str(ex)).dump_response()
 
             if (isinstance(response, Response)
                     or (isinstance(response, tuple) and isinstance(next(iter(response), None), Response))):
