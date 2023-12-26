@@ -7,5 +7,5 @@ class GetUserRequest(BaseModel):
 
 class GetUserResponse(BaseModel):
     email: EmailStr
-    email_verified: bool
+    email_verified: bool = False
     sub: str

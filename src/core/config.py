@@ -1,37 +1,60 @@
 import os
-from datetime import timedelta
+from logging.config import dictConfig
+from pathlib import Path
 
 from dotenv import load_dotenv
 
 load_dotenv('../.env')
 
 
-# Flask configuration
-# Check this documentation for more information
-# https://flask.palletsprojects.com/en/3.0.x/config/
-
-
 class Config:
+    # Flask configuration
+    # Check this documentation for more information
+    # https://flask.palletsprojects.com/en/3.0.x/config/
     DEBUG = True
     TESTING = True
-    PROPAGATE_EXCEPTIONS = None
-    TRAP_HTTP_EXCEPTIONS = False
-    TRAP_BAD_REQUEST_ERRORS = None
     SECRET_KEY = os.getenv('SECRET_KEY')
-    SESSION_COOKIE_NAME = 'session'
-    SESSION_COOKIE_DOMAIN = None
-    SESSION_COOKIE_PATH = None
-    SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SECURE = False
-    SESSION_COOKIE_SAMESITE = None
-    PERMANENT_SESSION_LIFETIME = timedelta(days=31)
-    SESSION_REFRESH_EACH_REQUEST = True
-    USE_X_SENDFILE = False
-    SEND_FILE_MAX_AGE_DEFAULT = None
-    SERVER_NAME = None
-    APPLICATION_ROOT = '/'
-    PREFERRED_URL_SCHEME = 'http'
-    MAX_CONTENT_LENGTH = None
-    TEMPLATES_AUTO_RELOAD = None
-    EXPLAIN_TEMPLATE_LOADING = False
-    MAX_COOKIE_SIZE = 4093
+
+    # Custom configuration
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    LOG_LEVEL = 'DEBUG'
+    LOG_HANDLER = ['console', 'file']
+
+
+LOG_FOLDER = Config.BASE_DIR / '../logs'
+LOG_FOLDER.mkdir(parents=True, exist_ok=True)
+dictConfig(
+    {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'default': {
+                'format': '[%(asctime)s] %(levelname)s [%(pathname)s:%(lineno)s] %(message)s',
+                'datefmt': '%Y-%m-%d %H:%M:%S'
+            },
+        },
+        'handlers': {
+            'console': {
+                'level': Config.LOG_LEVEL,
+                'class': 'logging.StreamHandler',
+                'formatter': 'default',
+            },
+            'file': {
+                'level': Config.LOG_LEVEL,
+                'class': 'logging.handlers.RotatingFileHandler',
+                'formatter': 'default',
+                'filename': LOG_FOLDER / 'file.log',
+                'maxBytes': 50000,
+                'backupCount': 5,
+            },
+
+        },
+        'loggers': {
+            'log': {
+                'handlers': Config.LOG_HANDLER,
+                'level': Config.LOG_LEVEL,
+                'propagate': True,
+            }
+        },
+    }
+)

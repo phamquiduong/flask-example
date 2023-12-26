@@ -11,6 +11,7 @@ services:
     volumes:
       - ../src:/src
       - ../.env:/.env
+      - ../logs/:/logs/
     command: bash -c "cd src && gunicorn --bind 0.0.0.0:${FLASK_PORT} 'app:create_app()' --reload"
     restart: always
 
